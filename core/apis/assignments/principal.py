@@ -22,7 +22,7 @@ def list_assignments(p):
 def regrade_assignment(p, in_payload):
     "Grading an assignment"
     grade_payload=AssignmentGradeSchema().load(in_payload)
-    grading_assignment=Assignment.mark_grade(
+    grading_assignment=Assignment.grade_by_principal(
         _id=grade_payload.id,
         grade=grade_payload.grade,
         auth_principal=p,

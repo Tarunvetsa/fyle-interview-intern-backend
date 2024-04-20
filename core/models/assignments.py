@@ -97,4 +97,5 @@ class Assignment(db.Model):
     def get_assignments_by_principal(cls, principal_id):
         principal=Principal.get_by_id(principal_id)
         assertions.assert_found(principal, "No principal with this id was found")
-        return cls.filter().all()
+        return cls.filter(cls.state.in_([AssignmentStateEnum.SUBMITTED, AssignmentStateEnum.GRADED])).all()
+        

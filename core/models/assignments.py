@@ -69,6 +69,7 @@ class Assignment(db.Model):
         assertions.assert_valid(assignment.state is AssignmentStateEnum.DRAFT, 'only a draft assignment can be submitted')
 
         assignment.teacher_id = teacher_id
+        assignment.state = AssignmentStateEnum.SUBMITTED
         db.session.flush()
 
         return assignment

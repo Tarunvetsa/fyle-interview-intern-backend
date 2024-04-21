@@ -86,3 +86,40 @@ def test_assignment_resubmit_error(client, h_student_1):
     assert response.status_code == 400
     assert error_response['error'] == 'FyleError'
     assert error_response["message"] == 'only a draft assignment can be submitted'
+
+
+def test_assignment_submit_nonexistent_assignment(client, h_student_1):
+    """
+    failure case: Attempting to submit a nonexistent assignment
+    """
+    response = client.post(
+        '/student/assignments/submit',
+        headers=h_student_1,
+        json={
+            'id': 100000,
+            'teacher_id': 2
+        })
+
+    error_response = response.json
+    assert response.status_code == 404
+    assert error_response['error'] == 'FyleError'
+    assert error_response["message"] == 'No assignment with this id was found'
+    
+    
+def test_submit_assignment_cross(client, h_student_1):
+    """
+    failure case: assignment 1 was submitted to teacher 2 and not teacher 1
+    """
+    response = client.post(
+        '/student/assignments/submit',
+        headers=h_student_1,
+        json={
+            "id": 1,
+            'teacher_id': 1
+        }
+    )
+
+    assert response.status_code == 400
+    data = response.json
+
+    assert data['error'] == 'FyleError'
